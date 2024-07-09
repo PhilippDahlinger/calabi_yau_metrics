@@ -4,8 +4,6 @@ defaults:
   - override /hydra/launcher: submitit_slurm
   - _self_
 
-env:
-  path_to_datasets: /home/i53/mitarbeiter/philipp_dahlinger/code/datasets/pc_gns
 
 hydra:
   mode: MULTIRUN  # needed for launcher to be used

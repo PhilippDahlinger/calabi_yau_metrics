@@ -9,4 +9,10 @@ env:
 
 exp_name: p0201_baseline
 
+hydra:
+  mode: MULTIRUN
+  sweeper:
+    params:
+      seed: 0, 1, 2, 3
+
 

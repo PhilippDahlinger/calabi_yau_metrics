@@ -13,7 +13,6 @@ import time
 import math
 import argparse
 
-import MLGeometry as mlg
 from models import *
 
 z0, z1, z2, z3, z4 = sp.symbols('z0, z1, z2, z3, z4')
@@ -67,11 +66,11 @@ elif args.function == 'f2':
 
 np.random.seed(seed)
 tf.random.set_seed(seed)
-HS = mlg.hypersurface.Hypersurface(Z, f, n_pairs)
-HS_test = mlg.hypersurface.Hypersurface(Z, f, n_pairs)
+HS = src.MLGeometry.hypersurface.Hypersurface(Z, f, n_pairs)
+HS_test = src.MLGeometry.hypersurface.Hypersurface(Z, f, n_pairs)
 
-train_set = mlg.tf_dataset.generate_dataset(HS)
-test_set = mlg.tf_dataset.generate_dataset(HS_test)
+train_set = src.MLGeometry.tf_dataset.generate_dataset(HS)
+test_set = src.MLGeometry.tf_dataset.generate_dataset(HS_test)
 
 #if batch_size is None or args.optimizer.lower() == 'lbfgs':
 if batch_size is None:
@@ -125,8 +124,8 @@ else:
 
 
 max_epochs = args.max_epochs
-func_dict = {"weighted_MAPE": mlg.loss.weighted_MAPE, "weighted_MSE": mlg.loss.weighted_MSE, "max_error":mlg.loss.max_error,
-             "MAPE_plus_max_error": mlg.loss.MAPE_plus_max_error}
+func_dict = {"weighted_MAPE": src.MLGeometry.loss.weighted_MAPE, "weighted_MSE": src.MLGeometry.loss.weighted_MSE, "max_error": src.MLGeometry.loss.max_error,
+             "MAPE_plus_max_error": src.MLGeometry.loss.MAPE_plus_max_error}
 loss_func = func_dict[args.loss_func]
 #early_stopping = False
 clip_threshold = args.clip_threshold
@@ -137,7 +136,7 @@ save_name = args.save_name
 
 @tf.function
 def volume_form(x, Omega_Omegabar, mass, restriction):
-    kahler_metric = mlg.complex_math.complex_hessian(tf.math.real(model(x)), x)
+    kahler_metric = src.MLGeometry.complex_math.complex_hessian(tf.math.real(model(x)), x)
     volume_form = tf.math.real(tf.linalg.det(tf.matmul(restriction, tf.matmul(kahler_metric, restriction, adjoint_b=True))))
     weights = mass / tf.reduce_sum(mass)
     factor = tf.reduce_sum(weights * volume_form / Omega_Omegabar)
@@ -165,7 +164,7 @@ def cal_max_error(dataset):
     max_error_tmp = 0
     for step, (points, Omega_Omegabar, mass, restriction) in enumerate(dataset):
         det_omega = volume_form(points, Omega_Omegabar, mass, restriction)
-        error = mlg.loss.max_error(Omega_Omegabar, det_omega, mass).numpy()
+        error = src.MLGeometry.loss.max_error(Omega_Omegabar, det_omega, mass).numpy()
         if error > max_error_tmp:
             max_error_tmp = error
 
@@ -177,7 +176,7 @@ if args.optimizer.lower() == 'lbfgs':
     # iter+1 everytime f is evoked, which will also be invoked when calculationg the hessian, etc
     # So the true max_epochs will be 3 times user's input
     max_epochs = int(max_epochs/3)
-    train_func = mlg.lbfgs.function_factory(model, loss_func, train_set)
+    train_func = src.MLGeometry.lbfgs.function_factory(model, loss_func, train_set)
 
     init_params = tf.dynamic_stitch(train_func.idx, model.trainable_variables)
     results = tfp.optimizer.lbfgs_minimize(value_and_gradients_function=train_func,
@@ -224,11 +223,11 @@ else:
             sigma_max_train = cal_max_error(train_set) 
             sigma_max_test = cal_max_error(test_set) 
 
-            E_train = cal_total_loss(train_set, mlg.loss.weighted_MSE)
-            E_test = cal_total_loss(test_set, mlg.loss.weighted_MSE)
+            E_train = cal_total_loss(train_set, src.MLGeometry.loss.weighted_MSE)
+            E_test = cal_total_loss(test_set, src.MLGeometry.loss.weighted_MSE)
         
-            sigma_train = cal_total_loss(train_set, mlg.loss.weighted_MAPE)
-            sigma_test  = cal_total_loss(test_set, mlg.loss.weighted_MAPE)
+            sigma_train = cal_total_loss(train_set, src.MLGeometry.loss.weighted_MAPE)
+            sigma_test  = cal_total_loss(test_set, src.MLGeometry.loss.weighted_MAPE)
 
             def delta_sigma_square_train(y_true, y_pred, mass):
                 weights = mass / K.sum(mass)
@@ -266,10 +265,10 @@ train_time = time.time() - start_time
 
 model.save(save_dir + '/' + save_name)
 
-sigma_train = cal_total_loss(train_set, mlg.loss.weighted_MAPE) 
-sigma_test = cal_total_loss(test_set, mlg.loss.weighted_MAPE) 
-E_train = cal_total_loss(train_set, mlg.loss.weighted_MSE) 
-E_test = cal_total_loss(test_set, mlg.loss.weighted_MSE) 
+sigma_train = cal_total_loss(train_set, src.MLGeometry.loss.weighted_MAPE)
+sigma_test = cal_total_loss(test_set, src.MLGeometry.loss.weighted_MAPE)
+E_train = cal_total_loss(train_set, src.MLGeometry.loss.weighted_MSE)
+E_test = cal_total_loss(test_set, src.MLGeometry.loss.weighted_MSE)
 sigma_max_train = cal_max_error(train_set) 
 sigma_max_test = cal_max_error(test_set) 
 

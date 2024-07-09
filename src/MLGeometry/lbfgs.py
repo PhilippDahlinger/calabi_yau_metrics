@@ -17,9 +17,7 @@ Matplotlib version: 3.1.1
 """
 import numpy
 import tensorflow as tf
-import tensorflow_probability as tfp
-from matplotlib import pyplot
-from . import complex_math 
+from . import complex_math
 
 __all__ = ['function_factory']
 

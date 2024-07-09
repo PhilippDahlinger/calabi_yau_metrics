@@ -1,5 +1,5 @@
 import tensorflow as tf
-from MLGeometry import bihomoNN as bnn
+from src.MLGeometry import bihomoNN as bnn
 
 __all__ = ['zerolayer', 'onelayer', 'twolayers', 'threelayers', 'fourlayers', 
            'fivelayers','OuterProductNN_k2','OuterProductNN_k3','OuterProductNN_k4',

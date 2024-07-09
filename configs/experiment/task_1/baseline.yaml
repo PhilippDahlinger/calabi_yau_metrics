@@ -3,4 +3,10 @@
 defaults:
   - override /algorithm: base_algorithm
 
-exp_name: p0101_baseline
+epochs: 2000
+env:
+  n_pairs: 10000
+
+exp_name: p0201_baseline
+
+

@@ -9,7 +9,7 @@ defaults:
 
 exp_name: ???
 
-epochs: 1000
+epochs: 2000
 seed: 0
 
 wandb:

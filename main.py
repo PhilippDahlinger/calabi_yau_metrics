@@ -1,5 +1,8 @@
 import os
 import sys
+import random
+
+import numpy as np
 import tensorflow as tf
 import traceback
 
@@ -10,7 +13,7 @@ from omegaconf import OmegaConf, DictConfig
 from calabi_yau_metrics.algorithms import get_algorithm
 from calabi_yau_metrics.envs.environment import Environment
 from calabi_yau_metrics.evaluation.evaluator import Evaluator
-from calabi_yau_metrics.util.util import load_omega_conf_resolvers
+from calabi_yau_metrics.util.util import load_omega_conf_resolvers, initialize_seed
 from calabi_yau_metrics.util.wandb_stuff import initialize_wandb
 
 # full stack trace
@@ -19,11 +22,11 @@ os.environ["HYDRA_FULL_ERROR"] = "1"
 # register OmegaConf resolver for hydra
 load_omega_conf_resolvers()
 
-
 @hydra.main(version_base=None, config_path="configs", config_name="training_config")
 def train(config: DictConfig) -> None:
     try:
         print(OmegaConf.to_yaml(config))
+        initialize_seed(config)
         env = Environment(config.env)
         algorithm = get_algorithm(config.algorithm, env)
         evaluator = Evaluator(config.evaluation, env, algorithm)
@@ -39,8 +42,9 @@ def train(config: DictConfig) -> None:
             if config.wandb.enabled:
                 wandb.log({"train_epoch_loss": train_epoch_loss, "mape_test_loss": mape_test_loss,
                            "mse_test_loss": mse_test_loss}, step=epoch)
-            print("Finished epoch", epoch, "with train loss", train_epoch_loss, "and test losses", mape_test_loss,)
-
+            print("Finished epoch", epoch, "with train loss", train_epoch_loss, "and test losses", mape_test_loss, )
+        if config.wandb.enabled:
+            wandb.finish()
         # for epoch in range(config.epochs):
         #     training_metrics = algorithm.train_step(epoch=epoch)
         #     evaluation_metrics = evaluator.eval_step(epoch=epoch)

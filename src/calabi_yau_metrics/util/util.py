@@ -1,4 +1,15 @@
+import random
+import tensorflow as tf
+
+import numpy as np
 from omegaconf import OmegaConf
+
+
+def initialize_seed(config):
+    np.random.seed(config.seed)
+    random.seed(config.seed)
+    tf.random.set_seed(config.seed)
+
 
 
 def load_omega_conf_resolvers():

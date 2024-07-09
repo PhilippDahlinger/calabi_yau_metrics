@@ -1,0 +1,6 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: base_algorithm
+
+exp_name: p0101_baseline

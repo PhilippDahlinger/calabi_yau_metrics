@@ -1,1 +1,2 @@
 name: bihomogenous_nn
+learning_rate: 0.001

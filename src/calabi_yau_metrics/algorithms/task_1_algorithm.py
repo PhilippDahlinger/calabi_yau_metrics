@@ -29,3 +29,16 @@ class Task1Algorithm:
             grads = tape.gradient(loss, self.model.trainable_weights)
         self.optimizer.apply_gradients(zip(grads, self.model.trainable_weights))
         return loss
+
+    def calc_total_loss(self, dataset, loss_function):
+        total_loss = tf.constant(0, dtype=tf.float32)
+        total_mass = tf.constant(0, dtype=tf.float32)
+
+        for step, (points, Omega_Omegabar, mass, restriction) in enumerate(dataset):
+            det_omega = self.volume_form(points, Omega_Omegabar, mass, restriction)
+            mass_sum = tf.reduce_sum(mass)
+            total_loss += loss_function(Omega_Omegabar, det_omega, mass) * mass_sum
+            total_mass += mass_sum
+        total_loss = total_loss / total_mass
+
+        return total_loss.numpy()

@@ -1,0 +1,18 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: base_algorithm
+
+epochs: 2000
+env:
+  n_pairs: 100000
+
+exp_name: p0301_bigger_baseline
+
+hydra:
+  mode: MULTIRUN
+  sweeper:
+    params:
+      seed: 0, 1, 2, 3
+
+

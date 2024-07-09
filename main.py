@@ -24,10 +24,12 @@ def train(config: DictConfig) -> None:
         env = Environment(config.env)
         algorithm = get_algorithm(config.algorithm, env)
         for epoch in range(config.epochs):
+            all_losses = []
             for step, (points, Omega_Omegabar, mass, restriction) in enumerate(env.train_set):
+                all_losses.append(algorithm.single_train_step(points, Omega_Omegabar, mass, restriction))
 
-            if epoch % 50 == 0:
-                print("epoch %d: loss = %.5f" % (epoch, loss))
+            train_epoch_loss = tf.reduce_mean(all_losses)
+            print(f"Epoch {epoch}, Loss: {train_epoch_loss}")
         # for epoch in range(config.epochs):
         #     training_metrics = algorithm.train_step(epoch=epoch)
         #     evaluation_metrics = evaluator.eval_step(epoch=epoch)

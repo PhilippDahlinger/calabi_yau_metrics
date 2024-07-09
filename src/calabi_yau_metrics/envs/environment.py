@@ -17,4 +17,6 @@ class Environment:
         HS_test = MLGeometry.hypersurface.Hypersurface(Z, f, config.n_pairs)
         self.train_set = MLGeometry.tf_dataset.generate_dataset(HS_train)
         self.test_set = MLGeometry.tf_dataset.generate_dataset(HS_test)
+        self.train_set = self.train_set.shuffle(HS_train.n_points).batch(config.batch_size)
+        self.test_set = self.test_set.shuffle(HS_test.n_points).batch(config.batch_size)
 

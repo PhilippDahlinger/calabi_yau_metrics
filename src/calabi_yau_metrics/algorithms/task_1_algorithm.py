@@ -9,6 +9,7 @@ class Task1Algorithm:
         self.model = BihomogenousNN()
         self.optimizer = tf.keras.optimizers.Adam(learning_rate=config.learning_rate)
 
+    @tf.function
     def volume_form(self, points, Omega_Omegabar, mass, restriction):
         kahler_metric = MLGeometry.complex_math.complex_hessian(tf.math.real(self.model(points)), points)
         volume_form = tf.matmul(restriction, tf.matmul(kahler_metric, restriction, adjoint_b=True))
@@ -27,3 +28,4 @@ class Task1Algorithm:
             loss = MLGeometry.loss.weighted_MAPE(Omega_Omegabar, det_omega, mass)
             grads = tape.gradient(loss, self.model.trainable_weights)
         self.optimizer.apply_gradients(zip(grads, self.model.trainable_weights))
+        return loss

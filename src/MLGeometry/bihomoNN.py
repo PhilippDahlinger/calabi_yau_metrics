@@ -89,7 +89,7 @@ def remove_zero_entries(x):
     return x
 
 class SquareDense(keras.layers.Layer):
-    def __init__(self, input_dim, units, activation=tf.square, trainable=True):
+    def __init__(self, input_dim, units, activation=tf.square, batchnorm=False, trainable=True):
         super(SquareDense, self).__init__()
         w_init = tf.random_normal_initializer(mean=0.0, stddev=0.05)
         self.w = tf.Variable(
@@ -97,10 +97,16 @@ class SquareDense(keras.layers.Layer):
             #initial_value=w_init(shape=(input_dim, units), dtype='float32'),
             trainable=trainable,
         )
+        self.use_batchnorm = batchnorm
+        if batchnorm:
+            self.bn = keras.layers.BatchNormalization()
         self.activation = activations.get(activation)
 
-    def call(self, inputs):
-        return self.activation(tf.matmul(inputs, self.w))
+    def call(self, inputs, training=False):
+        linear_output = tf.matmul(inputs, self.w)
+        if self.use_batchnorm:
+            linear_output = self.bn(linear_output, training=training)
+        return self.activation(linear_output)
 
 class WidthOneDense(keras.layers.Layer):
     '''

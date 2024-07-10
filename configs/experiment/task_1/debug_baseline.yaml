@@ -5,13 +5,16 @@ defaults:
 
 epochs: 10
 env:
-  n_pairs: 1000
+  n_pairs: 3000
 
+algorithm:
+  dropout_rate: 0.0
+  batchnorm: False
 
-exp_name: p0101_debug_baseline
+exp_name: p0102_debug_baseline
 
 hydra:
   mode: MULTIRUN
   sweeper:
     params:
-      seed: 0, 1, 2, 3
+      seed: 1

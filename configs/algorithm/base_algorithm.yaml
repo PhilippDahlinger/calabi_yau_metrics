@@ -1,2 +1,5 @@
 name: task_1
 learning_rate: 0.001
+network_structure: guide  # choose from guide, 4_layers, 5_layers, thick
+dropout_rate: 0.0
+batchnorm: False

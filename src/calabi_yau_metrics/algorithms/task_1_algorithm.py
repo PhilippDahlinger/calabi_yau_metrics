@@ -23,19 +23,19 @@ class Task1Algorithm:
         elif self.config.network_structure == "4_layers":
             layers_config = [
                 {"input_dim": 5 ** 2, "output_dim": 30},
-                {"input_dim": 30, "output_dim": 50},
-                {"input_dim": 50, "output_dim": 70},
+                {"input_dim": 30, "output_dim": 30},
+                {"input_dim": 30, "output_dim": 70},
                 {"input_dim": 70, "output_dim": 100},
                 {"input_dim": 100, "output_dim": 1},
             ]
         elif self.config.network_structure == "5_layers":
             layers_config = [
                 {"input_dim": 5 ** 2, "output_dim": 30},
-                {"input_dim": 30, "output_dim": 50},
-                {"input_dim": 50, "output_dim": 70},
+                {"input_dim": 30, "output_dim": 30},
+                {"input_dim": 30, "output_dim": 30},
+                {"input_dim": 30, "output_dim": 70},
                 {"input_dim": 70, "output_dim": 100},
-                {"input_dim": 100, "output_dim": 150},
-                {"input_dim": 150, "output_dim": 1},
+                {"input_dim": 100, "output_dim": 1},
             ]
         elif self.config.network_structure == "thick":
             layers_config = [

@@ -1,0 +1,19 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: base_algorithm
+
+epochs: 2000
+env:
+  n_pairs: 10000
+
+exp_name: p0402_big_network_structure_ablation
+
+hydra:
+  mode: MULTIRUN
+  sweeper:
+    params:
+      seed: 0, 1
+      algorithm.network_structure: 4_layers, 5_layers
+
+

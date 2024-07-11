@@ -39,9 +39,11 @@ def train(config: DictConfig) -> None:
 
             train_epoch_loss = tf.reduce_mean(all_losses)
             mape_test_loss, mse_test_loss = evaluator.evaluate(epoch)
+            current_learning_rate = algorithm.optimizer.learning_rate.numpy()
             if config.wandb.enabled:
                 wandb.log({"train_epoch_loss": train_epoch_loss, "mape_test_loss": mape_test_loss,
-                           "mse_test_loss": mse_test_loss}, step=epoch)
+                           "mse_test_loss": mse_test_loss,
+                           "learning_rate": current_learning_rate}, step=epoch)
             print("Finished epoch", epoch, "with train loss", train_epoch_loss, "and test losses", mape_test_loss, )
         if config.wandb.enabled:
             wandb.finish()

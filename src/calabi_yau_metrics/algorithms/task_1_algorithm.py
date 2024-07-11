@@ -44,6 +44,20 @@ class Task1Algorithm:
                 {"input_dim": 150, "output_dim": 250},
                 {"input_dim": 250, "output_dim": 1},
             ]
+        elif self.config.network_structure == "thicker":
+            layers_config = [
+                {"input_dim": 5 ** 2, "output_dim": 64},
+                {"input_dim": 64, "output_dim": 256},
+                {"input_dim": 256, "output_dim": 1024},
+                {"input_dim": 1024, "output_dim": 1},
+            ]
+        elif self.config.network_structure == "thickerx2":
+            layers_config = [
+                {"input_dim": 5 ** 2, "output_dim": 64},
+                {"input_dim": 64, "output_dim": 512},
+                {"input_dim": 512, "output_dim": 2048},
+                {"input_dim": 2048, "output_dim": 1},
+            ]
         else:
             raise ValueError("Invalid network structure")
         # batchnorm and dropout
@@ -52,7 +66,15 @@ class Task1Algorithm:
             layer["dropout_rate"] = self.config.dropout_rate
 
         self.model = BihomogenousNN(layers_config)
-        self.optimizer = tf.keras.optimizers.Adam(learning_rate=config.learning_rate)
+        if config.learning_rate_decay_steps is None:
+            lr_schedule = config.learning_rate
+        else:
+            lr_schedule = tf.keras.optimizers.schedules.ExponentialDecay(
+                config.learning_rate,
+                decay_steps=len(self.env.train_set) * config.learning_rate_decay_steps,
+                decay_rate=0.96,
+                staircase=True)
+        self.optimizer = tf.keras.optimizers.Adam(learning_rate=lr_schedule)
         self.training_mode = False
 
     @tf.function

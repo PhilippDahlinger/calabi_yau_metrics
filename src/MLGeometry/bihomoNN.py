@@ -7,6 +7,31 @@ __all__ = ['Bihomogeneous', 'Bihomogeneous_k2', 'Bihomogeneous_k3',
            'Bihomogeneous_k4', 'SquareDense', 'WidthOneDense']
 
 
+class Spectral(keras.layers.Layer):
+    '''A layer transform zi to zi*zjbar'''
+
+    def __init__(self, d=5):
+        super(Spectral, self).__init__()
+        self.d = d
+
+    def call(self, inputs):
+        squared_norms = tf.math.real(inputs) ** 2 + tf.math.imag(inputs) ** 2
+        # Sum the squared norms to get the total squared norm
+        total_squared_norm = tf.reduce_sum(squared_norms, axis=-1)
+
+        zzbar = tf.einsum('ai,aj->aij', inputs, tf.math.conj(inputs))
+        zzbar = tf.linalg.band_part(zzbar, 0, -1)
+        zzbar = tf.reshape(zzbar, [-1, self.d ** 2])
+        zzbar = tf.concat([
+            tf.math.real(zzbar) / total_squared_norm,
+            tf.math.imag(zzbar) / total_squared_norm
+        ], axis=1)
+
+        out = zzbar
+
+        return out
+
+
 class Bihomogeneous(keras.layers.Layer):
     '''A layer transform zi to zi*zjbar'''
 

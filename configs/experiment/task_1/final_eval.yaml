@@ -6,19 +6,20 @@ defaults:
 epochs: 2000
 env:
   n_pairs: 100000
+  batch_size: 2000
 
 algorithm:
   network_structure: thicker
   learning_rate: 0.01
   learning_rate_decay_steps: 20
 
-exp_name: p0601_final_eval
+exp_name: p0602_final_eval
 
 hydra:
   mode: MULTIRUN
   sweeper:
     params:
-      seed: 69
+      seed: 420
       env.name: fermat_quintett, phi_function, alpha_function
 
 

@@ -12,13 +12,13 @@ algorithm:
   learning_rate: 0.001
   learning_rate_decay_steps: null
 
-exp_name: p2601_final_eval
+exp_name: p2602_final_eval
 
 hydra:
   mode: MULTIRUN
   sweeper:
     params:
-      seed: 69
+      seed: 420
       env.name: fermat_quintett, phi_function, alpha_function
 
 

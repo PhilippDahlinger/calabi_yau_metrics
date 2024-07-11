@@ -1,0 +1,23 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: task_3
+
+epochs: 2000
+env:
+  n_pairs: 10000
+
+algorithm:
+  learning_rate_decay_steps: null
+
+exp_name: p3201_fixed_lr_ablation_with_bias
+
+hydra:
+  mode: MULTIRUN
+  sweeper:
+    params:
+      seed: 0
+      algorithm.network_structure: guide, more_g_steps
+      algorithm.learning_rate: 0.01, 0.001, 0.0001
+
+

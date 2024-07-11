@@ -1,0 +1,24 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: task_3
+
+epochs: 2000
+env:
+  n_pairs: 100000
+
+algorithm:
+  network_structure: ???
+  learning_rate: ???
+  learning_rate_decay_steps: ???
+
+exp_name: p3601_final_eval
+
+hydra:
+  mode: MULTIRUN
+  sweeper:
+    params:
+      seed: 69
+      env.name: fermat_quintett, phi_function, alpha_function
+
+

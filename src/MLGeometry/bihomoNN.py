@@ -23,8 +23,8 @@ class Spectral(keras.layers.Layer):
         zzbar = tf.linalg.band_part(zzbar, 0, -1)
         zzbar = tf.reshape(zzbar, [-1, self.d ** 2])
         zzbar = tf.concat([
-            tf.math.real(zzbar) / total_squared_norm,
-            tf.math.imag(zzbar) / total_squared_norm
+            tf.math.real(zzbar) / total_squared_norm[:, None],
+            tf.math.imag(zzbar) / total_squared_norm[:, None]
         ], axis=1)
 
         out = zzbar
@@ -134,13 +134,18 @@ class SquareDense(keras.layers.Layer):
         self.use_batchnorm = batchnorm
         if batchnorm:
             self.bn = keras.layers.BatchNormalization()
+        if activation is None:
+            self.activation = None
         self.activation = activations.get(activation)
 
     def call(self, inputs, training=False):
         linear_output = tf.matmul(inputs, self.w)
         if self.use_batchnorm:
             linear_output = self.bn(linear_output, training=training)
-        return self.activation(linear_output)
+        if self.activation is None:
+            return linear_output
+        else:
+            return self.activation(linear_output)
 
 
 class WidthOneDense(keras.layers.Layer):

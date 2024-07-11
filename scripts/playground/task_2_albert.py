@@ -7,11 +7,6 @@ Original file is located at
     https://colab.research.google.com/drive/1BKgYZ1QfcbBDhwnTA1PAnyschEUJrWQk
 """
 
-from google.colab import drive
-drive.mount('/content/drive')
-
-!pip install sympy matplotlib ipykernel
-
 """# MLGeometry guide
 
 This introduction demonstrates how to use MLGeometry to:

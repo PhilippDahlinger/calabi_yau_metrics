@@ -1,0 +1,4 @@
+name: task_3
+learning_rate: 0.001
+learning_rate_decay_steps: null  # after how many epochs the learning rate should be decayed
+network_structure: guide  # choose from guide, 4_layers, 5_layers, thick, thicker, thickerx2

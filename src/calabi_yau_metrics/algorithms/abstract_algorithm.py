@@ -43,6 +43,9 @@ class AbstractAlgorithm:
         self.optimizer.apply_gradients(zip(grads, self.model.trainable_weights))
         return loss
 
+
+
+
     def calc_total_loss(self, dataset, loss_function):
         # this is used for testing
         self.training_mode = False

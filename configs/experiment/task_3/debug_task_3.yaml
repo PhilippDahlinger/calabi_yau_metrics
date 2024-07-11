@@ -1,0 +1,19 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: task_3
+
+epochs: 10
+env:
+  n_pairs: 3000
+
+algorithm:
+  learning_rate_decay_steps: null
+
+exp_name: p3001_debug_task_3
+
+hydra:
+  mode: MULTIRUN
+  sweeper:
+    params:
+      seed: 1

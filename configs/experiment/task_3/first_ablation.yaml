@@ -10,7 +10,7 @@ env:
 algorithm:
   learning_rate_decay_steps: null
 
-exp_name: p3201_fixed_lr_ablation_with_bias
+exp_name: p3301_correct_norm_ablation
 
 hydra:
   mode: MULTIRUN

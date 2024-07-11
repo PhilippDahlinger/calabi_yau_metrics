@@ -30,14 +30,18 @@ class U1EquivariantLayer(tf.keras.Model):
         assert self.group_elements.dtype == tf.complex64
         assert self.group_elements.shape[0] == self.n_steps
 
+
     def call(self, inputs):
         if len(inputs.shape) != 2:
             raise ValueError("Wrong shape expected (B, C) but it is ", inputs.shape)
 
         batch_size, dim = inputs.shape
         z = inputs
-        z = z / tf.cast(tf.math.abs(z), tf.complex64)
-        z = tf.multiply(self.group_elements[None, :, None], z[:, None, :])
+
+        norm = tf.norm(z, ord='euclidean', axis=1)
+        z = z / norm[:, None]
+        z = tf.multiply(self.group_elements[None, :, None],  z[:, None, :])
+
         # z = tf.reshape(z, [batch_size*self.n_steps, dim])
         z = tf.reshape(z, [-1, dim])
         z_real, z_imag = tf.math.real(z), tf.math.imag(z)

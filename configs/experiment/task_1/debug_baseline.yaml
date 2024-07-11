@@ -3,16 +3,17 @@
 defaults:
   - override /algorithm: base_algorithm
 
-epochs: 10
+epochs: 1000
 env:
   n_pairs: 3000
+  name: phi_function
 
 algorithm:
   dropout_rate: 0.0
   batchnorm: False
   learning_rate_decay_steps: 2
 
-exp_name: p0102_debug_baseline
+exp_name: p0103_debug_baseline
 
 hydra:
   mode: MULTIRUN

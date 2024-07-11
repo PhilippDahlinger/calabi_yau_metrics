@@ -27,11 +27,11 @@ class Task2Algorithm(AbstractAlgorithm):
             ]
         elif self.config.network_structure == "4_layers":
             layers_config = [
-                {"input_dim": 50, "output_dim": 30},
-                {"input_dim": 30, "output_dim": 30},
-                {"input_dim": 30, "output_dim": 70},
-                {"input_dim": 70, "output_dim": 100},
-                {"input_dim": 100, "output_dim": 1},
+                {"input_dim": 50, "output_dim": 64},
+                {"input_dim": 64, "output_dim": 128},
+                {"input_dim": 128, "output_dim": 256},
+                {"input_dim": 256, "output_dim": 512},
+                {"input_dim": 512, "output_dim": 1},
             ]
         elif self.config.network_structure == "5_layers":
             layers_config = [

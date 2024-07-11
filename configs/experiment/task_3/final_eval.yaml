@@ -8,9 +8,9 @@ env:
   n_pairs: 100000
 
 algorithm:
-  network_structure: ???
-  learning_rate: ???
-  learning_rate_decay_steps: ???
+  network_structure: more_g_steps
+  learning_rate: 0.001
+  learning_rate_decay_steps: null
 
 exp_name: p3601_final_eval
 

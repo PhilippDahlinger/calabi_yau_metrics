@@ -6,7 +6,7 @@ defaults:
 epochs: 1000
 env:
   n_pairs: 3000
-  name: phi_function
+
 
 algorithm:
   dropout_rate: 0.0

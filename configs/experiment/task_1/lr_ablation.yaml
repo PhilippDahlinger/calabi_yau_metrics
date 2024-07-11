@@ -1,0 +1,21 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: base_algorithm
+
+epochs: 2000
+env:
+  n_pairs: 10000
+
+exp_name: p0501_lr_ablation
+
+hydra:
+  mode: MULTIRUN
+  sweeper:
+    params:
+      seed: 0
+      algorithm.network_structure: thicker
+      algorithm.learning_rate: 0.01, 0.001
+      algorithm.learning_rate_decay_steps: 10, 20
+
+

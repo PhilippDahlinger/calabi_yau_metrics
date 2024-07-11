@@ -12,6 +12,6 @@ hydra:
     timeout_min: 8640 # in minutes
     gres: gpu:1  # we want all GPUs in a node
     mem_per_cpu: 15000  # in MB (* 8 cores in use = 120GB)
-    exclude: node[1-3,7]  # e.g. do not allocate on these nodes because the RTX2080 doesn't have enough VRAM
+#    exclude: node[1-3,7]  # e.g. do not allocate on these nodes because the RTX2080 doesn't have enough VRAM
     additional_parameters:
       cpus-per-task: 2  # we want all CPUs in a node

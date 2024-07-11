@@ -1,12 +1,15 @@
 import MLGeometry
+from calabi_yau_metrics.algorithms.abstract_algorithm import AbstractAlgorithm
 from calabi_yau_metrics.architectures.bihomogenous_nn import BihomogenousNN
 import tensorflow as tf
 
 
-class Task1Algorithm:
+class Task1Algorithm(AbstractAlgorithm):
+
     def __init__(self, config, env):
-        self.config = config
-        self.env = env
+        super().__init__(config, env)
+
+    def get_model(self):
         if self.config.network_structure == "guide":
             layers_config = [
                 {"input_dim": 5 ** 2, "output_dim": 70},
@@ -65,20 +68,15 @@ class Task1Algorithm:
             layer["batchnorm"] = self.config.batchnorm
             layer["dropout_rate"] = self.config.dropout_rate
 
-        self.model = BihomogenousNN(layers_config)
-        if config.learning_rate_decay_steps is None:
-            lr_schedule = config.learning_rate
-        else:
-            lr_schedule = tf.keras.optimizers.schedules.ExponentialDecay(
-                config.learning_rate,
-                decay_steps=len(self.env.train_set) * config.learning_rate_decay_steps,
-                decay_rate=0.96,
-                staircase=True)
-        self.optimizer = tf.keras.optimizers.Adam(learning_rate=lr_schedule)
-        self.training_mode = False
+        return BihomogenousNN(layers_config)
+
+    def get_omega_mass(self, batch):
+        points, Omega_Omegabar, mass, restriction = batch
+        return Omega_Omegabar, mass
 
     @tf.function
-    def volume_form(self, points, Omega_Omegabar, mass, restriction):
+    def volume_form(self, batch):
+        points, Omega_Omegabar, mass, restriction = batch
         kahler_metric = MLGeometry.complex_math.complex_hessian(
             tf.math.real(self.model(points, training=self.training_mode)), points)
         volume_form = tf.matmul(restriction, tf.matmul(kahler_metric, restriction, adjoint_b=True))
@@ -90,27 +88,3 @@ class Task1Algorithm:
         factor = tf.reduce_sum(weights * volume_form / Omega_Omegabar)
 
         return volume_form / factor
-
-    def single_train_step(self, points, Omega_Omegabar, mass, restriction):
-        self.training_mode = True
-        with tf.GradientTape() as tape:
-            det_omega = self.volume_form(points, Omega_Omegabar, mass, restriction)
-            loss = MLGeometry.loss.weighted_MAPE(Omega_Omegabar, det_omega, mass)
-            grads = tape.gradient(loss, self.model.trainable_weights)
-        self.optimizer.apply_gradients(zip(grads, self.model.trainable_weights))
-        return loss
-
-    def calc_total_loss(self, dataset, loss_function):
-        # this is used for testing
-        self.training_mode = False
-        total_loss = tf.constant(0, dtype=tf.float32)
-        total_mass = tf.constant(0, dtype=tf.float32)
-
-        for step, (points, Omega_Omegabar, mass, restriction) in enumerate(dataset):
-            det_omega = self.volume_form(points, Omega_Omegabar, mass, restriction)
-            mass_sum = tf.reduce_sum(mass)
-            total_loss += loss_function(Omega_Omegabar, det_omega, mass) * mass_sum
-            total_mass += mass_sum
-        total_loss = total_loss / total_mass
-
-        return total_loss.numpy()

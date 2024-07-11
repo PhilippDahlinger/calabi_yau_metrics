@@ -34,8 +34,8 @@ def train(config: DictConfig) -> None:
             initialize_wandb(config)
         for epoch in range(config.epochs):
             all_losses = []
-            for step, (points, Omega_Omegabar, mass, restriction) in enumerate(env.train_set):
-                all_losses.append(algorithm.single_train_step(points, Omega_Omegabar, mass, restriction))
+            for step, batch in enumerate(env.train_set):
+                all_losses.append(algorithm.single_train_step(batch))
 
             train_epoch_loss = tf.reduce_mean(all_losses)
             mape_test_loss, mse_test_loss = evaluator.evaluate(epoch)

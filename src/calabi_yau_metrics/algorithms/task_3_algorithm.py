@@ -17,6 +17,10 @@ class Task3Algorithm(AbstractAlgorithm):
             n_units = [16, 16, 16]
             m_units = [128, 128, 128, 1]
             g_steps = 8
+        elif self.config.network_structure == "more_g_steps":
+            n_units = [16, 16, 16]
+            m_units = [128, 128, 128, 1]
+            g_steps = 16
         else:
             raise ValueError("Invalid network structure")
 

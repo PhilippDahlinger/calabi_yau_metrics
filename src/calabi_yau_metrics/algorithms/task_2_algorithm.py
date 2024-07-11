@@ -4,6 +4,7 @@ from calabi_yau_metrics.architectures.bihomogenous_nn import BihomogenousNN
 import tensorflow as tf
 
 from calabi_yau_metrics.architectures.spectral_nn import SpectralNN
+from calabi_yau_metrics.architectures.spectral_nn_bias import SpectralNNBias
 
 
 class Task2Algorithm(AbstractAlgorithm):
@@ -69,8 +70,10 @@ class Task2Algorithm(AbstractAlgorithm):
         for layer in layers_config:
             layer["batchnorm"] = self.config.batchnorm
             layer["dropout_rate"] = self.config.dropout_rate
-
-        return SpectralNN(layers_config)
+        if self.config.use_bias:
+            return SpectralNNBias(layers_config)
+        else:
+            return SpectralNN(layers_config)
 
     def get_omega_mass(self, batch):
         points, Omega_Omegabar, mass, restriction, FS_metric = batch

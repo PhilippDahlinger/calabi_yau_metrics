@@ -18,7 +18,7 @@ hydra:
   mode: MULTIRUN
   sweeper:
     params:
-      seed: 420
+      seed: 420, 421
       env.name: fermat_quintett, phi_function, alpha_function
 
 
